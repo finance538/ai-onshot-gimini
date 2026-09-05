@@ -1,0 +1,9 @@
+{
+  "name": "oneshot-ai-android",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo 'OneShot AI Android build ready'",
+    "dev": "echo 'Android emulator ready'"
+  }
+}

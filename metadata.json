@@ -1,0 +1,8 @@
+{
+  "name": "Remix marchant",
+  "description": "Imported from GitHub: finance538/marchant",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
