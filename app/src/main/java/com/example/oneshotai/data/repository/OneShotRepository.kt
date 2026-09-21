@@ -3,6 +3,7 @@ package com.example.oneshotai.data.repository
 import com.example.oneshotai.data.local.*
 import com.example.oneshotai.model.*
 import com.example.oneshotai.network.GeminiClient
+import com.example.oneshotai.network.HermesClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -50,7 +51,8 @@ class OneShotRepository(private val appDao: AppDao) {
         conversationId: String,
         userContent: String,
         provider: ModelProvider,
-        activeProject: Project? = null
+        activeProject: Project? = null,
+        activeAgentId: String = "default"
     ): String = withContext(Dispatchers.IO) {
         val now = System.currentTimeMillis()
         val userMsgId = "msg_user_$now"
@@ -78,11 +80,15 @@ class OneShotRepository(private val appDao: AppDao) {
             }
         }
 
-        val assistantText = GeminiClient.generateContent(
-            prompt = userContent,
-            systemContext = systemContext,
-            model = provider.modelName
-        )
+        val assistantText = if (activeAgentId == "hermes") {
+            HermesClient.sendTask(userContent)
+        } else {
+            GeminiClient.generateContent(
+                prompt = userContent,
+                systemContext = systemContext,
+                model = provider.modelName
+            )
+        }
 
         val assistantMsgId = "msg_asst_${System.currentTimeMillis()}"
         appDao.insertMessage(
@@ -91,7 +97,7 @@ class OneShotRepository(private val appDao: AppDao) {
                 conversationId = conversationId,
                 role = "assistant",
                 content = assistantText,
-                modelProvider = provider.displayName,
+                modelProvider = if (activeAgentId == "hermes") "OneShot-Hermes" else provider.displayName,
                 timestamp = System.currentTimeMillis()
             )
         )
