@@ -20,7 +20,9 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         val geminiApiKey = System.getenv("GEMINI_API_KEY") ?: ""
+        val hermesProxyUrl = System.getenv("HERMES_PROXY_URL") ?: "https://oneshot-ai-gimini-web.netlify.app/api/hermes"
         buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
+        buildConfigField("String", "HERMES_PROXY_URL", "\"$hermesProxyUrl\"")
     }
 
     buildTypes {
