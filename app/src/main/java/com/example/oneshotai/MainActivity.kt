@@ -122,6 +122,7 @@ class MainActivity : ComponentActivity() {
                                         state = state,
                                         onNavigateTab = { viewModel.setScreenTab(it) },
                                         onStartAgentChat = { agent ->
+                                            viewModel.setActiveAgent(agent.id)
                                             viewModel.startNewConversation()
                                             viewModel.setScreenTab(ScreenTab.CHAT)
                                             viewModel.sendMessage(
