@@ -29,6 +29,7 @@ data class UiState(
     val messages: List<Message> = emptyList(),
     val isSending: Boolean = false,
     val currentProvider: ModelProvider = ModelProvider.GEMINI_3_8_FLASH,
+    val activeAgentId: String = "default",
     val projects: List<Project> = emptyList(),
     val activeProject: Project? = null,
     val tasks: List<TaskItem> = emptyList(),
@@ -222,7 +223,8 @@ class OneShotViewModel(private val repository: OneShotRepository) : ViewModel() 
                     conversationId = convId,
                     userContent = trimmed,
                     provider = _uiState.value.currentProvider,
-                    activeProject = _uiState.value.activeProject
+                    activeProject = _uiState.value.activeProject,
+                    activeAgentId = _uiState.value.activeAgentId
                 )
             } catch (e: Exception) {
                 _uiState.update { it.copy(errorMessage = e.message ?: "Failed to send message") }
@@ -238,6 +240,10 @@ class OneShotViewModel(private val repository: OneShotRepository) : ViewModel() 
 
     fun setModelProvider(provider: ModelProvider) {
         _uiState.update { it.copy(currentProvider = provider) }
+    }
+
+    fun setActiveAgent(agentId: String) {
+        _uiState.update { it.copy(activeAgentId = agentId) }
     }
 
     fun toggleLanguage() {
