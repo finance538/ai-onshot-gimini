@@ -38,6 +38,17 @@ data class AgentCardData(
 
 val defaultAgents = listOf(
     AgentCardData(
+        id = "hermes",
+        nameEn = "OneShot-Hermes",
+        nameAr = "هيرميز",
+        roleEn = "Task Execution Agent",
+        roleAr = "وكيل تنفيذ المهام",
+        descEn = "Executes real operational tasks through the Hermes A2A service and returns results to OneShot AI.",
+        descAr = "ينفذ المهام التشغيلية الفعلية عبر خدمة Hermes A2A ويعيد النتائج إلى OneShot AI.",
+        icon = Icons.Default.SmartToy,
+        isFeatured = true
+    ),
+    AgentCardData(
         id = "deepfind",
         nameEn = "DeepFind Research Agent",
         nameAr = "وكيل البحث DeepFind",
@@ -46,7 +57,7 @@ val defaultAgents = listOf(
         descEn = "Collect public domain evidence (DNS, WHOIS, HTTP headers, Technology, Wayback) and produce source-labelled reports.",
         descAr = "يجمع الأدلة العامة عن النطاق (DNS، WHOIS، الترويسات، التقنيات، الأرشيف) ويصدر تقريرًا موثقًا بمصادر واضحة.",
         icon = Icons.Default.Search,
-        isFeatured = true
+        isFeatured = false
     ),
     AgentCardData(
         id = "gm",
