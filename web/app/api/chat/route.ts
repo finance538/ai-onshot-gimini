@@ -1,23 +1,40 @@
 type Message = { role: 'user' | 'assistant'; content: string };
 export const runtime = 'nodejs';
+
+const API_BASE = process.env.ONESHOT_API_BASE_URL || 'https://api.1shotcam.com';
+
 export async function POST(req: Request) {
   try {
     const body = await req.json() as { messages?: Message[] };
     const messages = Array.isArray(body.messages) ? body.messages.slice(-20) : [];
-    if (!messages.length) return Response.json({ error: 'No messages supplied.' }, { status: 400 });
-    const key = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
-    const model = process.env.GOOGLE_MODEL || 'gemini-3.6-flash';
-    if (!key) return Response.json({ error: 'Gemini API key is not configured on the server.' }, { status: 503 });
-    const contents = messages.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content.slice(0, 12000) }] }));
-    const upstream = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
-      body: JSON.stringify({ systemInstruction: { parts: [{ text: 'You are OneShot AI, the operational AI workspace for OneShot. Be practical, concise, bilingual when asked, and do not claim tools you do not have.' }] }, contents, generationConfig: { temperature: 0.5, maxOutputTokens: 2000 } }),
-      cache: 'no-store', signal: AbortSignal.timeout(30000)
+    if (!messages.length) {
+      return Response.json({ error: 'No messages supplied.' }, { status: 400 });
+    }
+
+    const upstream = await fetch(`${API_BASE}/ai/chat`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: req.headers.get('cookie') || '',
+      },
+      body: JSON.stringify({ messages }),
+      cache: 'no-store',
+      signal: AbortSignal.timeout(125000),
     });
-    if (!upstream.ok) return Response.json({ error: `Gemini request failed (${upstream.status}).` }, { status: 502 });
-    const data = await upstream.json() as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
-    const text = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('').trim();
-    if (!text) return Response.json({ error: 'Gemini returned an empty response.' }, { status: 502 });
-    return Response.json({ text, model });
-  } catch { return Response.json({ error: 'Chat request failed.' }, { status: 500 }); }
+
+    const text = await upstream.text();
+    let data: Record<string, unknown> = {};
+    try { data = text ? JSON.parse(text) : {}; } catch { data = { error: text || 'Invalid upstream response' }; }
+
+    if (!upstream.ok) {
+      return Response.json(
+        { error: data.message || data.error || 'OneShot AI request failed.', code: data.code },
+        { status: upstream.status }
+      );
+    }
+
+    return Response.json(data);
+  } catch {
+    return Response.json({ error: 'Chat request failed.' }, { status: 500 });
+  }
 }
