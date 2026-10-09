@@ -10,6 +10,7 @@ import {
   type Settings,
 } from "@netlify/identity";
 import { Icon } from "./icon";
+import { BrandMark } from "./brand-mark";
 export type AuthMode = "login" | "signup" | "forgot" | "reset" | "invite";
 export function AuthDialog({
   onClose,
@@ -104,7 +105,7 @@ export function AuthDialog({
   return (
     <dialog ref={dialog} className="auth-dialog" onCancel={onClose}>
       <div className="dialog-top">
-        <img src="/oneshot.svg" alt="OneShot" width={38} height={38} />
+        <BrandMark size={38} title="OneShot" />
         <button
           className="icon-button"
           aria-label={t("Close", "إغلاق")}
