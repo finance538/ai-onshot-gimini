@@ -1,0 +1,10 @@
+node_modules/
+.next/
+.netlify/
+!.netlify/results.md
+.env*
+*.tsbuildinfo
+next-env.d.ts
+deno.lock
+playwright-report/
+test-results/
