@@ -25,6 +25,7 @@ import {
 import { api, copyText, download, newItem } from "../lib/client";
 import { utilities } from "../lib/utilities";
 import { Icon } from "../components/icon";
+import { BrandMark } from "../components/brand-mark";
 import { Markdown } from "../components/markdown";
 import { ToolLibrary } from "../components/tools";
 import { Records } from "../components/records";
@@ -546,7 +547,7 @@ export default function Home() {
       )}
       <aside className={`sidebar ${mobileMenu ? "is-open" : ""}`}>
         <button className="brand" onClick={() => navigate("chat")}>
-          <img src="/oneshot.svg" alt="" width={35} height={35} />
+          <BrandMark size={35} />
           <span>
             OneShot<span className="brand-ai"> AI</span>
           </span>
@@ -908,12 +909,7 @@ export default function Home() {
                           {m.role === "user" ? (
                             <Icon name="user" size={17} />
                           ) : (
-                            <img
-                              src="/oneshot.svg"
-                              alt=""
-                              width={24}
-                              height={24}
-                            />
+                            <BrandMark size={24} />
                           )}
                         </div>
                         <div className="message-body">
@@ -973,7 +969,7 @@ export default function Home() {
                     ))}
                     {busy && (
                       <div className="thinking" role="status">
-                        <img src="/oneshot.svg" alt="" width={22} height={22} />
+                        <BrandMark size={22} />
                         <span>
                           {t("Thinking it through", "جارٍ التفكير")}
                           <i />

@@ -9,7 +9,15 @@ export const metadata: Metadata = {
   title: "OneShot AI — Your ideas, into motion",
   description:
     "Your personal workspace for AI conversations, practical tools, projects, and ideas.",
-  icons: { icon: "/oneshot.svg" },
+  applicationName: "OneShot AI",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/oneshot.svg", type: "image/svg+xml" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
+  },
   appleWebApp: {
     capable: true,
     title: "OneShot AI",
@@ -20,7 +28,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#161816",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0A0B0E" },
+    { media: "(prefers-color-scheme: light)", color: "#f5f3ed" },
+  ],
 };
 export default function RootLayout({
   children,
